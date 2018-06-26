@@ -1,15 +1,35 @@
-
+logging:
+  level:
+    root: info
+    com.law: debug
+    # 下面的三行打印sql中的参数
+    org.hibernate: info
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql.BasicExtractor: trace
 # Tomcat
 server:
     tomcat:
         uri-encoding: UTF-8
         min-spare-threads: 30
 #    context-path: /bb/admin
-    port: 80
+    port: 8881
+    
+
+      
 spring:
+    jpa:
+      show-sql: true
+      generate-ddl: false
+      properties:
+        hibernate:
+          format_sql: true      
+      hibernate:
+        ddl-auto: none
+      
     thymeleaf:
         prefix: classpath:/views/
         mode : LEGACYHTML5
+        cache: false
 #     环境 dev|prod
     profiles:
         active: prod
@@ -40,9 +60,12 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
-            url: jdbc:mysql://111.231.12.224:3306/legal?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-            username: root
-            password: Falv2018
+#            url: jdbc:mysql://111.231.12.224:3306/legal?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+#            username: root
+#            password: Falv2018
+            url: jdbc:mysql://58.2.219.225:3306/a710009498?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+            username: a710009498
+            password: a710009498
 #     jackson时间格式化
     jackson:
         time-zone: GMT+8

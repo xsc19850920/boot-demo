@@ -31,12 +31,11 @@ $(window).on('resize', function() {
 
 //注册菜单组件
 Vue.component('menuItem',menuItem);
-
 var vm = new Vue({
 	el:'#rapp',
 	data:{
 		user:{},
-		menuList:{},
+		menuList:[],
 		main:"main.html",
 		password:'',
 		newPassword:'',
@@ -44,13 +43,10 @@ var vm = new Vue({
 	},
 	methods: {
 		getMenuList: function () {
-			$.getJSON(baseURL + "/sys/menu/nav", function(r){
-				vm.menuList = r.menuList;
-                window.permissions = r.permissions;
-			});
+			console.log(initMenuData);
 		},
 		getUser: function(){
-			$.getJSON(baseURL + "/sys/user/info", function(r){
+			$.getJSON(baseURL + "/sys/user", function(r){
 				vm.user = r.user;
 			});
 		},
@@ -86,14 +82,12 @@ var vm = new Vue({
 		},
         logout: function () {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: baseURL + "/sys/logout",
                 dataType: "json",
                 success: function(r){
-                    //删除本地token
-                    localStorage.removeItem("X-Token");
                     //跳转到登录页面
-                    location.href = baseURL + '/login.html';
+                	parent.location.href = baseURL + '/login.html';
                 }
             });
         },

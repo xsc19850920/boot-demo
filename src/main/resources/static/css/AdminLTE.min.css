@@ -530,8 +530,7 @@ a:hover, a:active, a:focus {
 }
 
 .sidebar-menu > li > a > .fa, .sidebar-menu > li > a > .glyphicon, .sidebar-menu > li > a > .ion {
-    width: 20px;
-    margin-right: 10px;
+    width: 20px
 }
 
 .sidebar-menu > li .label, .sidebar-menu > li .badge {
@@ -585,11 +584,11 @@ a:hover, a:active, a:focus {
 }
 
 .sidebar-menu .treeview-menu > li {
-    margin-right: 10px
+    margin: 0
 }
 
 .sidebar-menu .treeview-menu > li > a {
-    padding: 12px 5px 12px 32px;
+    padding: 12px 5px 12px 15px;
     display: block;
     font-size: 14px
 }

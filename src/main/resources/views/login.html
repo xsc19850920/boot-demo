@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>优家宝贝</title>
-  <meta name="keywords" content="优家宝贝">
-  <meta name="description" content="优家宝贝">
+  <title>后台管理系统</title>
+  <meta name="keywords" content="后台管理系统">
+  <meta name="description" content="后台管理系统">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/AdminLTE.min.css">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/AdminLTE.min.css}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="css/all-skins.min.css">
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" th:href="@{/css/all-skins.min.css}">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
 <body class="hold-transition login-page">
 <div class="login-box" id="rapp" v-cloak>
   <div class="login-logo">
-    <b>优家宝贝后台管理系统</b>
+    <b>后台管理系统</b>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -41,14 +41,6 @@
       <div class="form-group has-feedback">
           <input type="password" class="form-control" v-model="password" placeholder="密码" @keyup.enter="login"/>
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div v-show="kaptchaOnOff" class="form-group has-feedback">
-          <input type="text" class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
-          <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
-      </div>
-      <div v-show="kaptchaOnOff" class="form-group has-feedback">
-          <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
-          &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
       </div>
 
       <div class="row">
@@ -66,12 +58,12 @@
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
-<script src="libs/jquery.min.js"></script>
-<script src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
-<script src="libs/vue.min.js"></script>
-<script src="libs/bootstrap.min.js"></script>
-<script src="libs/app.js"></script>
-<script src="js/common.js"></script>
+<script th:src="@{/libs/jquery.min.js}"></script>
+<script th:src="@{/plugins/jqgrid/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/libs/vue.min.js}"></script>
+<script th:src="@{/libs/bootstrap.min.js}"></script>
+<script th:src="@{/libs/app.js}"></script>
+<script th:src="@{/js/common.js}"></script>
 <script type="text/javascript">
 var vm = new Vue({
 	el:'#rapp',
@@ -81,8 +73,6 @@ var vm = new Vue({
         captcha: '',
 		error: false,
 		errorMsg: '',
-        src: baseURL + '/captcha.jpg',
-        kaptchaOnOff: false
 	},
 	beforeCreate: function(){
 		if(self != top){
@@ -90,9 +80,6 @@ var vm = new Vue({
 		}
 	},
 	methods: {
-        refreshCode: function(){
-            this.src = baseURL + "/captcha.jpg?t=" + $.now();
-        },
 		login: function () {
             var data = "username="+vm.username+"&password="+vm.password;
             if(vm.kaptchaOnOff){
@@ -100,32 +87,20 @@ var vm = new Vue({
             }
 			$.ajax({
 				type: "POST",
-			    url: baseURL + "/sys/login",
+			    url: baseURL + "/login",
 			    data: data,
 			    dataType: "json",
 			    success: function(r){
 					if(r.code == 0){//登录成功
-                        localStorage.setItem("X-Token", r.token);
-                        parent.location.href = baseURL + '/index.html';
+                        parent.location.href = '/index.html';
 					}else{
 						vm.error = true;
 						vm.errorMsg = r.msg;
-                        if(vm.kaptchaOnOff) {
-                            vm.refreshCode();
-                        }
-					}
+                    }
 				}
 			});
-		},
-        getKaptchaOnOff: function () {
-            $.get(baseURL + "/sys/doGetKaptchaOnOff", function(r){
-                vm.kaptchaOnOff = r.kaptchaOnOff;
-            });
-        }
-	},
-    created: function(){
-        this.getKaptchaOnOff();
-    }
+		}
+	}
 });
 
 </script>

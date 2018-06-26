@@ -28,6 +28,23 @@ function getRootPath() {
     return projectName;
 }
 
+var initMenuData =[{
+	icon: "fa fa-cogs",
+	id: "1",
+	list: [{
+		icon: "fa fa-user",
+		id: "2",
+		name: "用户管理",
+		orderNum: 1,
+		parentId: "1",
+		type: 1,
+		url: "modules/sys/user.html"
+	}],
+	name: "系统管理",
+	orderNum: 0,
+	parentId: "0",
+	type: 0
+}];
 //上传文件的映射地址
 var uploadFileResource = baseURL + '/uploadFile';
 
@@ -41,37 +58,20 @@ if (token == 'null') {
 $.ajaxSetup({
     dataType: "json",
     cache: false,
-    headers: {
-        "X-Token": token
-    },
+//    headers: {
+//        "X-Token": token
+//    },
     xhrFields: {
         withCredentials: true
     },
     complete: function (xhr) {
         //无效的token，则跳转到登录页面
-        if (xhr.responseJSON.code == 401) {
-            parent.location.href = baseURL + '/login.html';
-        }
+//        if (xhr.responseJSON.code == 401) {
+//            parent.location.href = baseURL + '/login.html';
+//        }
     }
 });
 
-//jqgrid全局配置
-$.extend($.jgrid.defaults, {
-    ajaxGridOptions: {
-        headers: {
-            "X-Token": token
-        }
-    }
-});
-
-//权限判断
-function hasPermission(permission) {
-    if (window.parent.permissions.indexOf(permission) > -1) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 //重写alert
 window.alert = function (msg, callback) {

@@ -35,7 +35,23 @@ var vm = new Vue({
 	el:'#rapp',
 	data:{
 		user:{},
-		menuList:[],
+		menuList:[{
+			icon: "fa fa-cogs",
+			id: "1",
+			list: [{
+				icon: "fa fa-user",
+				id: "2",
+				name: "用户管理",
+				orderNum: 1,
+				parentId: "1",
+				type: 1,
+				url: "info.html"
+			}],
+			name: "系统管理",
+			orderNum: 0,
+			parentId: "0",
+			type: 0
+		}],
 		main:"main.html",
 		password:'',
 		newPassword:'',
@@ -43,10 +59,10 @@ var vm = new Vue({
 	},
 	methods: {
 		getMenuList: function () {
-			console.log(initMenuData);
+			alert(1);
 		},
 		getUser: function(){
-			$.getJSON(baseURL + "/sys/user", function(r){
+			$.getJSON(baseURL + "/user", function(r){
 				vm.user = r.user;
 			});
 		},
@@ -63,7 +79,7 @@ var vm = new Vue({
 					var data = "password="+vm.password+"&newPassword="+vm.newPassword;
 					$.ajax({
 						type: "POST",
-					    url: baseURL + "/sys/user/updatePassword",
+					    url:  "/updatePassword",
 					    data: data,
 					    dataType: "json",
 					    success: function(r){
@@ -83,11 +99,11 @@ var vm = new Vue({
         logout: function () {
             $.ajax({
                 type: "GET",
-                url: baseURL + "/sys/logout",
+                url:  "/logout",
                 dataType: "json",
                 success: function(r){
                     //跳转到登录页面
-                	parent.location.href = baseURL + '/login.html';
+                	parent.location.href = 'login';
                 }
             });
         },

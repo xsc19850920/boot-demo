@@ -1,8 +1,8 @@
-package com.law.modules.sys.controller;
+package com.law.sys.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.law.common.CommonUtils;
 import com.law.common.Result;
-import com.law.common.ThreadUser;
-import com.law.modules.sys.entity.SysUser;
-import com.law.modules.sys.repository.SysUserRepository;
+import com.law.sys.entity.SysUser;
+import com.law.sys.repository.SysUserRepository;
 
 
 @Controller
@@ -26,7 +26,7 @@ public class SystemController {
 	/**
 	 * 登录
 	 */
-	@RequestMapping(value = "/sys/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login()  {
 		return "login";
 	}
@@ -34,34 +34,41 @@ public class SystemController {
 	/**
 	 * 登录
 	 */
-	@RequestMapping(value = "/sys/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public Result login(String username, String password) {
+	public Result login(String username, String password,HttpSession session) {
 		SysUser user = sysUserRepository.findByUsername(username);
 		// 账号不存在
 		if (user == null || StringUtils.isEmpty(user.getPassword()) || !user.getPassword().equalsIgnoreCase(password)) {
 			return Result.error("用户名或者密码不正确");
 		}
-		ThreadUser.setSysUser(user);
+		session.setAttribute(CommonUtils.SESSION_USER, user);
 		Result r = Result.ok();
 		return r;
 	}
 
-	@RequestMapping(value = "/sys/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	@ResponseBody
-	public Result user()  {
-		Result r = Result.ok().put("user",ThreadUser.getSysUser());
+	public Result user(HttpSession session)  {
+		Result r = Result.ok().put("user",CommonUtils.getUser(session));
 		return r;
+	}
+
+
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index()  {
+		return "index";
 	}
 
     /**
 	 * 退出
      * @throws IOException
 	 */
-	@RequestMapping(value = "/sys/logout", method = RequestMethod.GET)
-	public void logout(HttpServletResponse response) throws IOException {
-		ThreadUser.setSysUser(null);
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@ResponseBody
+	public Result logout(HttpSession session)  {
+		CommonUtils.setUser(session, null);
+		Result r = Result.ok();
+		return r;
 	}
-
-
 }

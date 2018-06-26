@@ -1,4 +1,4 @@
-package com.law.modules.sys.entity;
+package com.law.sys.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + '/user/list',
+        url: baseURL + '/info_list',
         datatype: "json",
         colModel: [			
             { label: '用戶ID', name: 'userId', index: 'user_id', width: 110, key: true,hidden:true},

@@ -28,31 +28,10 @@ function getRootPath() {
     return projectName;
 }
 
-var initMenuData =[{
-	icon: "fa fa-cogs",
-	id: "1",
-	list: [{
-		icon: "fa fa-user",
-		id: "2",
-		name: "用户管理",
-		orderNum: 1,
-		parentId: "1",
-		type: 1,
-		url: "modules/sys/user.html"
-	}],
-	name: "系统管理",
-	orderNum: 0,
-	parentId: "0",
-	type: 0
-}];
+
 //上传文件的映射地址
 var uploadFileResource = baseURL + '/uploadFile';
 
-//登录token
-var token = localStorage.getItem("X-Token");
-if (token == 'null') {
-    parent.location.href = baseURL + '/login.html';
-}
 
 //jquery全局配置
 $.ajaxSetup({

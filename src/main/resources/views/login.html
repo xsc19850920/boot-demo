@@ -87,12 +87,12 @@ var vm = new Vue({
             }
 			$.ajax({
 				type: "POST",
-			    url: baseURL + "/login",
+			    url: "/login",
 			    data: data,
 			    dataType: "json",
 			    success: function(r){
 					if(r.code == 0){//登录成功
-                        parent.location.href = '/index.html';
+                        parent.location.href = '/index';
 					}else{
 						vm.error = true;
 						vm.errorMsg = r.msg;

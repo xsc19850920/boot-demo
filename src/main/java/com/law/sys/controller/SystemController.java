@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.law.common.CommonUtils;
 import com.law.common.Result;
-import com.law.sys.entity.SysUser;
-import com.law.sys.repository.SysUserRepository;
+import com.law.sys.entity.UserAdmin;
+import com.law.sys.repository.UserAdminRepository;
 
 
 @Controller
 public class SystemController {
 
 	@Autowired
-	private SysUserRepository sysUserRepository;
+	private UserAdminRepository userAdminRepository;
 
 	/**
 	 * 登录
@@ -37,7 +37,7 @@ public class SystemController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
 	public Result login(String username, String password,HttpSession session) {
-		SysUser user = sysUserRepository.findByUsername(username);
+		UserAdmin user = userAdminRepository.findByUsername(username);
 		// 账号不存在
 		if (user == null || StringUtils.isEmpty(user.getPassword()) || !user.getPassword().equalsIgnoreCase(password)) {
 			return Result.error("用户名或者密码不正确");

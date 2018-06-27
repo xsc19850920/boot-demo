@@ -41,8 +41,16 @@ var vm = new Vue({
 			list: [{
 				icon: "fa fa-user",
 				id: "2",
-				name: "用户管理",
+				name: "分类管理",
 				orderNum: 1,
+				parentId: "1",
+				type: 1,
+				url: "category.html"
+			},{
+				icon: "fa fa-user",
+				id: "3",
+				name: "文章管理",
+				orderNum: 2,
 				parentId: "1",
 				type: 1,
 				url: "info.html"
@@ -59,7 +67,6 @@ var vm = new Vue({
 	},
 	methods: {
 		getMenuList: function () {
-			alert(1);
 		},
 		getUser: function(){
 			$.getJSON(baseURL + "/user", function(r){

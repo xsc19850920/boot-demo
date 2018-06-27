@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.law.sys.entity.SysUser;
+import com.law.sys.entity.UserAdmin;
 
 @WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LoginFilter implements Filter {
@@ -31,7 +31,7 @@ public class LoginFilter implements Filter {
 		String queryUrl = request.getQueryString() == null ? "" : ("?" + request.getQueryString());// 获取参数
 		String requestUrl = request.getServletPath() + queryUrl;// httpRequest.getServletPath(),获取链接
 
-		SysUser sysUser = CommonUtils.getUser(session);
+		UserAdmin sysUser = CommonUtils.getUser(session);
 		if (sysUser == null) {
 			if (IGNORE_FILTER_PATH.equalsIgnoreCase(requestUrl)) {
 				filterChain.doFilter(servletRequest, servletResponse);

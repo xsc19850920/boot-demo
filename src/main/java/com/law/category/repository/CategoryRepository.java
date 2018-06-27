@@ -1,11 +1,10 @@
 package com.law.category.repository;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.law.sys.entity.SysUser;
+import com.law.category.entity.Category;
 
-public interface CategoryRepository extends Repository<SysUser, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-	public SysUser findByUsername(String username);
 
 }

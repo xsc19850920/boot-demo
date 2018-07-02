@@ -35,14 +35,12 @@
 			<a   class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 		</div>
-		<table id="menuTable" data-mobile-responsive="true" data-click-to-select="true">
-			<thead>
-			<tr>
-				<th data-field="selectItem" data-checkbox="true"></th>
-			</tr>
-			</thead>
-		</table>
+		<table class="table tree" id='div1'>
+		</table>	
 	</div>
+	
+	
+	
 
 	<div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>

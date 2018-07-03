@@ -33,14 +33,12 @@ var vm = new Vue({
 			return false;
 		},
 		beforeRename :function(treeId, treeNode, newName, isCancel) {
-			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 			if (newName.length == 0) {
-				zTree.cancelEditName();
 				alert("节点名称不能为空.");
 				return false;
 			}
 			if (newName.split(' - ').length < 2) {
-				zTree.cancelEditName();
+				
 				alert("标题，二级标题都不能为空.");
 				return false;
 			}

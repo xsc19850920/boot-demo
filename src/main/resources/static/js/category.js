@@ -1,142 +1,137 @@
 var vm = new Vue({
-    el:'#rrapp',
-    data:{
-        showList: true,
-        title: null,
-        selectDate:null,
-        menu:{
-            parentName:null,
-            parentId:0,
-            type:1,
-            orderNum:0
-        }
-    },
-    methods: {
-        getMenu: function(menuId){
-            //加载菜单树
-            $.get(baseURL + "sys/menu/select", function(r){
-                ztree = $.fn.zTree.init($("#menuTree"), setting, r.menuList);
-                var node = ztree.getNodeByParam("menuId", vm.menu.parentId);
-                ztree.selectNode(node);
-
-                vm.menu.parentName = node.name;
-            })
-        },
-        add: function(){
-            if($('.tree tr.success').length <= 0){
-            	 alert("请选择一条记录");
-                 return false;
-            }
-//            vm.showList = false;
-            vm.title = "新增";
-            console.info($('.tree tr.success').attr('id'));
-//            vm.menu = {parentName:null,parentId:0,type:1,orderNum:0};
-//            vm.getMenu();
-        },
-        update: function () {
-            var menuId = getMenuId();
-            if(menuId == null){
-                return ;
-            }
-
-            $.get(baseURL + "sys/menu/info/"+menuId, function(r){
-                vm.showList = false;
-                vm.title = "修改";
-                vm.menu = r.menu;
-
-                vm.getMenu();
-            });
-        },
-        del: function () {
-            var menuId = getMenuId();
-            if(menuId == null){
-                return ;
-            }
-
-            confirm('确定要删除选中的记录？', function(){
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + "sys/menu/delete",
-                    data: "menuId=" + menuId,
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                vm.reload();
-                            });
-                        }else{
-                            alert(r.msg);
-                        }
-                    }
-                });
-            });
-        },
-        saveOrUpdate: function (event) {
-            var url = vm.menu.menuId == null ? "sys/menu/save" : "sys/menu/update";
-            $.ajax({
-                type: "POST",
-                url: baseURL + url,
-                contentType: "application/json",
-                data: JSON.stringify(vm.menu),
-                success: function(r){
-                    if(r.code === 0){
-                        alert('操作成功', function(){
-                            vm.reload();
-                        });
-                    }else{
-                        alert(r.msg);
-                    }
-                }
-            });
-        },
-        reload: function () {
-            vm.showList = true;
-            Menu.table.refresh();
-        },
-		initTreeGrid : function(r) {
-			$('.tree').html('<tr ><td><b>分类名称</b></td><td><b>二级标题</b></td><td><b>显示顺序</b></td></tr>');
-			for (var i = 0; i < r.length; i++) {
-				var item = r[i];
-				debugger;
-				if($('.treegrid-'+item.parentId,$('.tree')).length > 0){
-					$('.treegrid-'+item.parentId,$('.tree')).after('<tr id="'+item.categoryId+'" class="treegrid-parent-' + item.parentId + '"><td>' + item.title + '</td> <td class="hidden-xs">' +item.subTitle + '</td><td class="hidden-xs">' + item.displayOrder + '</td></tr>');
-				}else{
-					$('.tree').append('<tr id="'+item.categoryId+'" class="treegrid-' + item.categoryId + '"> <td>' + item.title + '</td> <td class="hidden-xs">' + item.subTitle + '</td><td class="hidden-xs">' + item.displayOrder + '</td></tr>');
-				}
-			}
-			//event 
-			$('.tree tr').mouseup(function(){
-				$('.tree tr').removeClass("success");
-				$(this).addClass("success");
-			})
+	el : '#rrapp',
+	data : {
+		showList : true,
+		title : null,
+		selectDate : null,
+		menu : {
+			parentName : null,
+			parentId : 0,
+			type : 1,
+			orderNum : 0
 		}
-    }
+	},
+	methods : {
+		reload : function() {
+			vm.showList = true;
+			$.get(baseURL + "/category_list", function(r) {
+				$.fn.zTree.init($("#treeDemo"), setting, r);
+				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+				zTree.expandAll(true);
+			})
+		},
+		beforeRemove:function(treeId, treeNode) {
+			confirm("确认删除 节点 -- " + treeNode.name + " 及其所有字节点吗？", function() {
+				$.post('category_del', {
+					id : treeNode.id
+				}, function(r) {
+					vm.reload();
+				}, 'json');
+			});
+		},
+		beforeDrag:function(treeId, treeNodes) {
+			return false;
+		},
+		beforeRename :function(treeId, treeNode, newName, isCancel) {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			if (newName.length == 0) {
+				zTree.cancelEditName();
+				alert("节点名称不能为空.");
+				return false;
+			}
+			if (newName.split(' - ').length < 2) {
+				zTree.cancelEditName();
+				alert("标题，二级标题都不能为空.");
+				return false;
+			}
+			$.post('category_update', {
+				id : treeNode.id,
+				title : newName.split(' - ')[0],
+				subTitle : newName.split(' - ')[1],
+				lvl : treeNode.level +1,
+				parentId:treeNode.pId,
+			}, function(r) {
+				vm.reload();
+			}, 'json');
+			return true;
+		},
+		addHoverDom:function(treeId, treeNode) {
+			var sObj = $("#" + treeNode.tId + "_span");
+			if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0 || treeNode.level ==2)
+				return;
+			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+					+ "' title='添加分类' onfocus='this.blur();'></span>";
+			sObj.after(addStr);
+			var btn = $("#addBtn_" + treeNode.tId);
+			if (btn)
+				btn.bind("click", function() {
+					var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+					zTree.addNodes(treeNode, {
+						id : null,
+						pId : treeNode.id,
+						name : "新分类"
+					});
+					return false;
+				});
+		},
+		removeHoverDom:function(treeId, treeNode) {
+			$("#addBtn_" + treeNode.tId).unbind().remove();
+		},
+		 showRemoveBtn:function(treeId, treeNode) {
+			// return !treeNode.isFirstNode;
+			return treeId != 0;
+		},
+		 showRenameBtn:function(treeId, treeNode) {
+			// return !treeNode.isLastNode;
+			return treeId != 0;
+		}
+	}
 });
+var setting = {
+	view : {
+		addHoverDom : vm.addHoverDom,
+		removeHoverDom : vm.removeHoverDom,
+		selectedMulti : false,
+		showIcon : false
+	},
+	edit : {
+		enable : true,
+		editNameSelectAll : true,
+		showRemoveBtn : vm.showRemoveBtn,
+		showRenameBtn : vm.showRenameBtn
+	},
+	data : {
+		simpleData : {
+			enable : true
+		}
+	},
+	callback : {
+		beforeDrag : vm.beforeDrag,
+//		beforeEditName : beforeEditName,
+		beforeRemove : vm.beforeRemove,
+		beforeRename : vm.beforeRename,
+//		onRemove : onRemove,
+//		onRename : onRename
+	}
+};
+
+// var zNodes =[
+// { id:1, pId:0, name:"父节点 1", open:true},
+// { id:11, pId:1, name:"叶子节点 1-1"},
+// { id:12, pId:1, name:"叶子节点 1-2"},
+// { id:13, pId:1, name:"叶子节点 1-3"},
+// { id:2, pId:0, name:"父节点 2", open:true},
+// { id:21, pId:2, name:"叶子节点 2-1"},
+// { id:22, pId:2, name:"叶子节点 2-2"},
+// { id:23, pId:2, name:"叶子节点 2-3"},
+// { id:3, pId:0, name:"父节点 3", open:true},
+// { id:31, pId:3, name:"叶子节点 3-1"},
+// { id:32, pId:3, name:"叶子节点 3-2"},
+// { id:33, pId:3, name:"叶子节点 3-3"}
+// ];
 
 
-$(function(){
-	 $.get(baseURL + "/category_list", function(r){
-		 vm.initTreeGrid(r);
-		 $('.tree').treegrid({
-             expanderExpandedClass: 'glyphicon glyphicon-minus',
-             expanderCollapsedClass: 'glyphicon glyphicon-plus'
-         });
-     })
+$(function() {
+	vm.reload();
+
 });
-
-
-
-
-
-
-function getMenuId () {
-    var selected = $('#menuTable').bootstrapTreeTable('getSelections');
-    if (selected.length == 0) {
-        alert("请选择一条记录");
-        return false;
-    } else {
-        return selected[0].id;
-    }
-}
-
-
-

@@ -1,17 +1,19 @@
 package com.law.category.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+
 
 @Entity
 public class Category {
 	@Id
-	@GeneratedValue
 	@Column(name = "category_id")
 	// bigint(20) unsigned NOT NULL COMMENT '类别id',
-	private long categoryId;
+	private long id;
 	@Column(name = "create_time")
 	// bigint(20) unsigned NOT NULL COMMENT '添加时间',
 	private long createTime;
@@ -37,7 +39,7 @@ public class Category {
 	private String subTitle;
 	@Column(name = "parent_id")
 	// bigint(20) unsigned NOT NULL COMMENT '父类id',
-	private long parentId;
+	private long pId;
 	@Column(name = "lft")
 	// int(10) unsigned NOT NULL COMMENT '左节点',
 	private int lft;
@@ -56,11 +58,21 @@ public class Category {
 	@Column(name = "state_type")
 	// tinyint(4) NOT NULL COMMENT '状态(未处_无效 已处_有效)',
 	private int stateType;
-	public long getCategoryId() {
-		return categoryId;
+
+	@Transient
+	private boolean open =false;
+	@Transient
+	private String name ;
+
+	@Transient
+	private List<Category> child;
+
+
+	public long getId() {
+		return id;
 	}
-	public void setCategoryId(long categoryId) {
-		this.categoryId = categoryId;
+	public void setId(long id) {
+		this.id = id;
 	}
 	public long getCreateTime() {
 		return createTime;
@@ -104,12 +116,7 @@ public class Category {
 	public void setSubTitle(String subTitle) {
 		this.subTitle = subTitle;
 	}
-	public long getParentId() {
-		return parentId;
-	}
-	public void setParentId(long parentId) {
-		this.parentId = parentId;
-	}
+
 	public int getLft() {
 		return lft;
 	}
@@ -146,6 +153,30 @@ public class Category {
 	public void setStateType(int stateType) {
 		this.stateType = stateType;
 	}
+
+	public List<Category> getChild() {
+		return child;
+	}
+	public void setChild(List<Category> child) {
+		this.child = child;
+	}
+	public boolean isOpen() {
+		return open;
+	}
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+	public String getName() {
+		return this.title + " - " + this.subTitle;
+	}
+	public long getpId() {
+		return pId;
+	}
+	public void setpId(long pId) {
+		this.pId = pId;
+	}
+
+
 
 
 

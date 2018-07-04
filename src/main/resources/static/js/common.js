@@ -230,6 +230,5 @@ var attachmentLayerTemplate = Vue.extend({
 
 Vue.component('attachment-layer', attachmentLayerTemplate);
 
-
 //文本编辑器
 

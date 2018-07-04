@@ -58,7 +58,7 @@ var vm = new Vue({
 			if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0 || treeNode.level ==2)
 				return;
 			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-					+ "' title='添加分类' onfocus='this.blur();'></span>";
+					+ "' title='新增' onfocus='this.blur();'></span>";
 			sObj.after(addStr);
 			var btn = $("#addBtn_" + treeNode.tId);
 			if (btn)
@@ -67,7 +67,7 @@ var vm = new Vue({
 					zTree.addNodes(treeNode, {
 						id : null,
 						pId : treeNode.id,
-						name : "新分类"
+						name : "标题 - 二级标题"
 					});
 					return false;
 				});

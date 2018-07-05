@@ -185,7 +185,6 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "修改";
 			$.get(baseURL + "/info_view?id=" + id, function(r) {
-				console.log(r.info.infoDetailList[0]);
 				if(r.info.infoDetailList[0] == null){
 					r.info.infoDetailList = [{title:"",detail:"",}];
 				}

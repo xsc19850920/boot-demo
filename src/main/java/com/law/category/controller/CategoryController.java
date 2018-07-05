@@ -23,9 +23,16 @@ public class CategoryController {
 
 	@RequestMapping(value = "/category_list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Category> user(HttpSession session)  {
-		List<Category> list = categoryRepository.findAcitveCategory();
-
+	public List<Category> list(Long id)  {
+		List<Category> list = null;
+		if(id == null || id == 0){
+			id = 0l;
+			list = categoryRepository.findAcitveCategory();
+		}else{
+			list = categoryRepository.findAcitveCategoryByParentId(id);
+		}
+//		List<Category> specificationList = treeList(list, id);
+//		List<Category> finalList = treeList(specificationList);
 //		list = treeMenuList(list,0);
 //		Result r = Result.ok().put("list",list);
 		return list;

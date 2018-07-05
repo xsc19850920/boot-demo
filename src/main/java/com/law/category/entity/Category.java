@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class Category {
@@ -64,6 +66,7 @@ public class Category {
 	@Transient
 	private String name ;
 
+	@JsonIgnore
 	@Transient
 	private List<Category> child;
 

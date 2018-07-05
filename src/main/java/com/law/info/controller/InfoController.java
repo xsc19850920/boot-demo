@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.druid.util.StringUtils;
 import com.law.common.CommonUtils;
 import com.law.common.PageUtils;
 import com.law.common.Result;
@@ -47,14 +48,13 @@ public class InfoController {
 		Pageable pageable = new PageRequest(page == 0?0:page-1,limit, Sort.Direction.DESC,"id");
 		Info info = new Info();
 		info.setDelFlag(0);
-		info.setStateType(1);
 		if(null != params.get("keyword")){
 			info.setTitle( params.get("keyword").toString());
 		}
 		//创建匹配器，即如何使用查询条件
 		ExampleMatcher exampleMatcher = ExampleMatcher.matching()
 				.withMatcher("title",ExampleMatcher.GenericPropertyMatchers.contains())//like
-		        .withIgnorePaths("operIp","id","createTime","modifyTime","operUserId","indexDisplayFlag");//isFace字段不参与匹配
+		        .withIgnorePaths("operIp","id","createTime","modifyTime","operUserId","indexDisplayFlag","stateType");//isFace字段不参与匹配
 		//将匹配对象封装成Example对象
 		Example<Info> example = Example.of(info,exampleMatcher);
 		Page<com.law.info.entity.Info> list = infoRepository.findAll(example,pageable);
@@ -68,7 +68,7 @@ public class InfoController {
 
 	@GetMapping("/info_view")
 	@ResponseBody
-	public Result list(Long id){
+	public Result view(Long id){
 		Info info = infoRepository.findOne(id);
 		return Result.ok().put("info", info);
 	}
@@ -84,11 +84,15 @@ public class InfoController {
 			info.setId(id);
 			info.setIndexDisplayFlag(1);
 			info.setStateType(1);
-			Info infoFromDB = infoRepository.save(info);
-			List<InfoDetail> infoDetailList = infoFromDB.getInfoDetailList();
-			if(!CollectionUtils.isEmpty(infoDetailList)){
-				infoDetailList.stream().forEach(d->d.setInfo(infoFromDB));
+			if(StringUtils.isEmpty(info.getCoverImagePath())){
+				info.setCoverImagePath("");
 			}
+			List<InfoDetail> infoDetailList = info.getInfoDetailList();
+			if(!CollectionUtils.isEmpty(infoDetailList)){
+				infoDetailList.stream().forEach(d->d.setInfo(info));
+			}
+			infoRepository.save(info);
+
 		}else{ //update
 //			Info info = infoRepository.findOne(id);
 			List<InfoDetail> infoDetailList = info.getInfoDetailList();
@@ -100,5 +104,16 @@ public class InfoController {
 		}
 
 		return Result.ok().put("info", info);
+	}
+
+
+
+	@GetMapping("/info_delete")
+	@ResponseBody
+	public Result delete(Long id){
+		Info info = infoRepository.findOne(id);
+		info.setDelFlag(1);
+		infoRepository.save(info);
+		return Result.ok();
 	}
 }

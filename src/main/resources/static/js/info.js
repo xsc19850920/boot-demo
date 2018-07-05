@@ -25,42 +25,48 @@ $(function() {
 							label : '分类',
 							name : 'category.name',
 							width : 120,
+							sortable:false,
 						},
 						{
 							label : '第二级分类',
 							name : 'secondCategory.name',
 							width : 120,
+							sortable:false,
 						},
 						{
 							label : '标题',
 							name : 'title',
 							index : 'title',
 							width : 80,
+							sortable:false,
 						},
 						{
 							label : '子标题',
 							name : 'subTitle',
 							index : 'sub_title',
 							width : 80,
+							sortable:false,
 						},
 						{
 							label : '简介',
 							name : 'intro',
 							index : 'intro',
 							width : 80,
-
+							sortable:false,
 						},
 						{
 							label : '封面图片',
 							name : 'coverImagePath',
 							index : 'cover_image_path',
 							width : 80,
+							sortable:false,
 						},
 						{
 							label : '首页显示',
 							name : 'indexDisplayFlag',
 							index : 'index_display_flag',
 							width : 50,
+							sortable:false,
 							formatter : function(value, options, row) {
 								return value == 0 ? '不显示' : '显示';
 							}
@@ -70,6 +76,7 @@ $(function() {
 							name : 'stateType',
 							index : 'state_type',
 							width : 30,
+							sortable:false,
 							formatter : function(value, options, row) {
 								return value == 0 ? '无效' : '有效';
 							}
@@ -78,6 +85,7 @@ $(function() {
 							label : '操作',
 							name : 'id',
 							width : 50,
+							sortable:false,
 							formatter : function(value, options, row) {
 								var rowData = '';
 								var editBtn = "<a onclick='vm.getInfo(\""
@@ -137,6 +145,7 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add : function() {
+			vm.info = {category:{},secondCategory:{},infoDetailList:[{title:"",detail:"",}]};
 			vm.showList = false;
 			vm.title = "新增";
 		},
@@ -158,34 +167,28 @@ var vm = new Vue({
 				}
 			});
 		},
-		del : function(event) {
-			var userIds = getSelectedRows();
-			if (userIds == null) {
-				return;
-			}
-
+		del : function(id) {
 			confirm('确定要删除选中的记录？', function() {
-				$.ajax({
-					type : "POST",
-					url : baseURL + "/user/delete",
-					contentType : "application/json",
-					data : JSON.stringify(userIds),
-					success : function(r) {
-						if (r.code == 0) {
-							// alert('操作成功', function(index){
-							$("#jqGrid").trigger("reloadGrid");
-							// });
-						} else {
-							alert(r.msg);
-						}
+				$.get(baseURL + "/info_delete?id=" + id, function(r) {
+					if (r.code == 0) {
+						// alert('操作成功', function(index){
+						$("#jqGrid").trigger("reloadGrid");
+						// });
+					} else {
+						alert(r.msg);
 					}
 				});
+				
 			});
 		},
 		getInfo : function(id) {
 			vm.showList = false;
 			vm.title = "修改";
 			$.get(baseURL + "/info_view?id=" + id, function(r) {
+				console.log(r.info.infoDetailList[0]);
+				if(r.info.infoDetailList[0] == null){
+					r.info.infoDetailList = [{title:"",detail:"",}];
+				}
 				vm.info = r.info;
 			});
 		},
@@ -200,12 +203,16 @@ var vm = new Vue({
 			}).trigger("reloadGrid");
 		},
 		 menuTree: function(type){
-				 $.get(baseURL + "/category_list", function(r) {
+			 if((type == 'secondCategory' ) && (vm.info.category.id == null)){
+				 alert('请选择一级分类');
+				 return ;
+			 }
+			 var url  = type == 'category'? "/category_list?id=0" :("/category_list?id="+vm.info.category.id) ;
+				 $.get(url, function(r) {
 					 $.fn.zTree.init($("#menuTree"), setting, r);
 					 vm.zTree =$.fn.zTree.getZTreeObj("menuTree");
 					 vm.zTree.expandAll(true);
 				})
-				
 	            layer.open({
 	                type: 1,
 	                offset: '50px',
@@ -216,9 +223,16 @@ var vm = new Vue({
 	                shadeClose: false,
 	                content: jQuery("#menuLayer"),
 	                btn: ['确定', '取消'],
-	                btn1: function (index) {
-	                    var node = vm.zTree.getSelectedNodes()[0];
-	                    
+				    btn1 : function(index) {
+					var node = vm.zTree.getSelectedNodes()[0];
+					if (node == null) {
+						if (type == 'category') {
+							 alert('请选择一级分类');
+						} else if (type == 'secondCategory') {
+							 alert('请选择二级分类');
+						}
+						return;
+					}
 	                    
 	                    if(type == 'category'){
 	                    	vm.info.category = node;

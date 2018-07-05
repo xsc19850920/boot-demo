@@ -55,7 +55,7 @@ var vm = new Vue({
 		},
 		addHoverDom:function(treeId, treeNode) {
 			var sObj = $("#" + treeNode.tId + "_span");
-			if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0 || treeNode.level ==2)
+			if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0 || treeNode.level == 2)
 				return;
 			var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
 					+ "' title='新增' onfocus='this.blur();'></span>";
@@ -77,7 +77,7 @@ var vm = new Vue({
 		},
 		 showRemoveBtn:function(treeId, treeNode) {
 			// return !treeNode.isFirstNode;
-			return treeId != 0;
+			return treeNode != 0;
 		},
 		 showRenameBtn:function(treeId, treeNode) {
 			// return !treeNode.isLastNode;

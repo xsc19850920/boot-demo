@@ -1,6 +1,7 @@
 package com.law.common;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,7 +18,7 @@ import com.law.sys.entity.UserAdmin;
 
 @WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LoginFilter implements Filter {
-	private static final String IGNORE_FILTER_PATH = "/sys/login";
+	private static final String[] IGNORE_FILTER_PATHS = {"/login","/css","/js","/plugins","/libs","/fonts"};
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -33,11 +34,11 @@ public class LoginFilter implements Filter {
 
 		UserAdmin sysUser = CommonUtils.getUser(session);
 		if (sysUser == null) {
-			if (IGNORE_FILTER_PATH.equalsIgnoreCase(requestUrl)) {
+			if (Stream.of(IGNORE_FILTER_PATHS).anyMatch(s->requestUrl.startsWith(s))) {
 				filterChain.doFilter(servletRequest, servletResponse);
 			} else {
 				HttpServletResponse response = (HttpServletResponse) servletResponse;
-				response.sendRedirect("/sys/login");
+				response.sendRedirect("/login");
 			}
 
 		} else {

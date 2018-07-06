@@ -31,7 +31,7 @@ public class Category {
 
 	@Column(name = "del_flag")
 	// tinyint(1) NOT NULL COMMENT '删除标识',
-	private long delFlag;
+	private int delFlag;
 
 	@Column(name = "title")
 	// varchar(20) NOT NULL COMMENT '标题',
@@ -101,11 +101,15 @@ public class Category {
 	public void setOperUserId(long operUserId) {
 		this.operUserId = operUserId;
 	}
-	public long getDelFlag() {
+
+	public int getDelFlag() {
 		return delFlag;
 	}
-	public void setDelFlag(long delFlag) {
+	public void setDelFlag(int delFlag) {
 		this.delFlag = delFlag;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getTitle() {
 		return title;
@@ -170,7 +174,8 @@ public class Category {
 		this.open = open;
 	}
 	public String getName() {
-		return this.title + " - " + this.subTitle;
+//		return this.title + " - " + this.subTitle;
+		return this.title ;
 	}
 	public long getpId() {
 		return pId;

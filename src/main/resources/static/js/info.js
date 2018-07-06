@@ -145,7 +145,7 @@ var vm = new Vue({
 			vm.reload();
 		},
 		add : function() {
-			vm.info = {category:{},secondCategory:{},infoDetailList:[{title:"",detail:"",}]};
+			vm.info = {stateType:1,indexDisplayFlag:1,category:{},secondCategory:{},infoDetailList:[{title:"",detail:"",displayOrder:1}]};
 			vm.showList = false;
 			vm.title = "新增";
 		},
@@ -186,7 +186,7 @@ var vm = new Vue({
 			vm.title = "修改";
 			$.get(baseURL + "/info_view?id=" + id, function(r) {
 				if(r.info.infoDetailList[0] == null){
-					r.info.infoDetailList = [{title:"",detail:"",}];
+					r.info.infoDetailList = [{title:"",detail:"",displayOrder:1}];
 				}
 				vm.info = r.info;
 			});
@@ -202,11 +202,12 @@ var vm = new Vue({
 			}).trigger("reloadGrid");
 		},
 		 menuTree: function(type){
-			 if((type == 'secondCategory' ) && (vm.info.category.id == null)){
-				 alert('请选择一级分类');
-				 return ;
-			 }
-			 var url  = type == 'category'? "/category_list?id=0" :("/category_list?id="+vm.info.category.id) ;
+//			 if((type == 'secondCategory' ) && (vm.info.category.id == null)){
+//				 alert('请选择一级分类');
+//				 return ;
+//			 }
+//			 var url  = type == 'category'? "/category_list" :"/category_list?byLvl=true";
+			 var url = "/category_list" ;
 				 $.get(url, function(r) {
 					 $.fn.zTree.init($("#menuTree"), setting, r);
 					 vm.zTree =$.fn.zTree.getZTreeObj("menuTree");
@@ -224,22 +225,25 @@ var vm = new Vue({
 	                btn: ['确定', '取消'],
 				    btn1 : function(index) {
 					var node = vm.zTree.getSelectedNodes()[0];
+					console.info(node);
 					if (node == null) {
-						if (type == 'category') {
-							 alert('请选择一级分类');
-						} else if (type == 'secondCategory') {
-							 alert('请选择二级分类');
-						}
+//						if (type == 'category') {
+//							 alert('请选择一级分类');
+//						} else if (type == 'secondCategory') {
+//							 alert('请选择二级分类');
+//						}
+						alert('请选择分类');
 						return;
 					}
-	                    
-	                    if(type == 'category'){
-	                    	vm.info.category = node;
-	                    }else if(type == 'secondCategory'){
-	                    	vm.info.secondCategory = node;
-	                    }
+					vm.info.secondCategory = node;
+					vm.info.category.id = node.pId;
+//                    if(type == 'category'){
+//                    	vm.info.category = node;
+//                    }else if(type == 'secondCategory'){
+//                    	vm.info.secondCategory = node;
+//                    }
 
-	                    layer.close(index);
+                    layer.close(index);
 	                }
 	            });
 	            
@@ -249,8 +253,9 @@ var vm = new Vue({
 	        addPart:function(){
 	        	var partIndex = $('div.panel-info').length +1;
 	        	var clone = $('div.panel-info:last').clone();
-	        	clone.find('input[type=text]').val('');
+	        	clone.find('input[type=text]:first').val('');
 	        	clone.find('textarea').val('');
+	        	clone.find('input[type=text]').eq(1).val(1);
 	        	clone.find('.panel-title').html('段落 '+partIndex);
 	        	$('div.panel-info:last').after(clone);
 	        }

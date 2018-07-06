@@ -45,8 +45,6 @@ $.ajaxSetup({
     },
     complete: function (xhr) {
         //无效的token，则跳转到登录页面
-    	console.log(xhr);
-    	debugger;
         if (xhr.responseJSON.code == 401) {
             parent.location.href = baseURL + '/login';
         }

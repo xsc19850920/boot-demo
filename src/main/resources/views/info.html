@@ -49,14 +49,14 @@
 					<input type="text" class="form-control" v-model="info.subTitle" placeholder="子标题"/>
 				</div>
 			</div> -->
-			 <div class="form-group">
+			 <!-- <div class="form-group">
 				<div class="col-sm-2 control-label">分类</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" style="cursor:pointer;" v-model="info.category.name" @click="menuTree('category')" readonly="readonly" placeholder="分类"/>
 				</div>
-			</div>
+			</div> -->
 			<div class="form-group">
-				<div class="col-sm-2 control-label">二级分类</div>
+				<div class="col-sm-2 control-label">分类</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" style="cursor:pointer;" v-model="info.secondCategory.name" @click="menuTree('secondCategory')" readonly="readonly" placeholder="二级菜单"/>
 				</div>
@@ -76,10 +76,10 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">首页显示</div> 
 				<label class="radio-inline">
-				  <input type="radio" name="indexDisplayFlag" value="0" v-model="info.indexDisplayFlag"/>不显示
+				  <input type="radio" name="indexDisplayFlag" value="1" v-model="info.indexDisplayFlag" />显示
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" name="indexDisplayFlag" value="1" v-model="info.indexDisplayFlag"/>显示
+				  <input type="radio" name="indexDisplayFlag" value="0" v-model="info.indexDisplayFlag"/>不显示
 				</label>
 			</div>
 			<div class="form-group">
@@ -107,6 +107,12 @@
 					   	<div class="col-sm-2 control-label">段落详细</div>
 					   	<div class="col-sm-10">
 					   		<textarea rows="3" class="form-control" v-model="infoDetail.detail" placeholder="段落详细"></textarea>
+					    </div>
+					</div>
+						<div class="form-group">
+					   	<div class="col-sm-2 control-label">显示顺序</div>
+					   	<div class="col-sm-10">
+					   		<input rows="3" class="form-control" v-model="infoDetail.displayOrder" placeholder="显示顺序" />
 					    </div>
 					</div>
 			    </div>

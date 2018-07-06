@@ -23,14 +23,14 @@ public class CategoryController {
 
 	@RequestMapping(value = "/category_list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Category> list(Long id)  {
+	public List<Category> list(/*Boolean byLvl*/)  {
 		List<Category> list = null;
-		if(id == null || id == 0){
-			id = 0l;
+//		if( byLvl == null || !byLvl ){
 			list = categoryRepository.findAcitveCategory();
-		}else{
-			list = categoryRepository.findAcitveCategoryByParentId(id);
-		}
+//		}else{
+////			list = categoryRepository.findAcitveCategoryByParentId(id);
+//			list = categoryRepository.findByLvlAndDelFlag(3,0);
+//		}
 //		List<Category> specificationList = treeList(list, id);
 //		List<Category> finalList = treeList(specificationList);
 //		list = treeMenuList(list,0);

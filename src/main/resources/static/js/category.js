@@ -21,7 +21,7 @@ var vm = new Vue({
 			})
 		},
 		beforeRemove:function(treeId, treeNode) {
-			confirm("确认删除 节点 -- " + treeNode.name + " 及其所有字节点吗？", function() {
+			confirm("确认删除 分类 -- " + treeNode.name + " 及其所有子分类吗？", function() {
 				$.post('category_del', {
 					id : treeNode.id
 				}, function(r) {
@@ -34,18 +34,20 @@ var vm = new Vue({
 		},
 		beforeRename :function(treeId, treeNode, newName, isCancel) {
 			if (newName.length == 0) {
-				alert("节点名称不能为空.");
+				alert("分类名称不能为空.");
 				return false;
 			}
-			if (newName.split(' - ').length < 2) {
-				
-				alert("标题，二级标题都不能为空.");
-				return false;
-			}
+//			if (newName.split(' - ').length < 2) {
+//				
+//				alert("标题，二级标题都不能为空.");
+//				return false;
+//			}
 			$.post('category_update', {
 				id : treeNode.id,
-				title : newName.split(' - ')[0],
-				subTitle : newName.split(' - ')[1],
+//				title : newName.split(' - ')[0],
+//				subTitle : newName.split(' - ')[1],
+				title : newName,
+				subTitle : "",
 				lvl : treeNode.level +1,
 				parentId:treeNode.pId,
 			}, function(r) {
@@ -67,7 +69,8 @@ var vm = new Vue({
 					zTree.addNodes(treeNode, {
 						id : null,
 						pId : treeNode.id,
-						name : "标题 - 二级标题"
+//						name : "标题 - 二级标题"
+						name : "新分类"
 					});
 					return false;
 				});

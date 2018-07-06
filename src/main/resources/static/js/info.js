@@ -158,9 +158,9 @@ var vm = new Vue({
 				data : JSON.stringify(vm.info),
 				success : function(r) {
 					if (r.code === 0) {
-						// alert('操作成功', function(index){
-						vm.reload();
-						// });
+						 alert('操作成功', function(index){
+							 vm.reload();
+						 });
 					} else {
 						alert(r.msg);
 					}

@@ -40,13 +40,13 @@ $(function() {
 							width : 80,
 							sortable:false,
 						},
-						{
-							label : '子标题',
-							name : 'subTitle',
-							index : 'sub_title',
-							width : 80,
-							sortable:false,
-						},
+//						{
+//							label : '子标题',
+//							name : 'subTitle',
+//							index : 'sub_title',
+//							width : 80,
+//							sortable:false,
+//						},
 						{
 							label : '简介',
 							name : 'intro',
@@ -54,13 +54,13 @@ $(function() {
 							width : 80,
 							sortable:false,
 						},
-						{
-							label : '封面图片',
-							name : 'coverImagePath',
-							index : 'cover_image_path',
-							width : 80,
-							sortable:false,
-						},
+//						{
+//							label : '封面图片',
+//							name : 'coverImagePath',
+//							index : 'cover_image_path',
+//							width : 80,
+//							sortable:false,
+//						},
 						{
 							label : '首页显示',
 							name : 'indexDisplayFlag',

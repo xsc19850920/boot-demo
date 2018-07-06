@@ -84,6 +84,8 @@ public class InfoController {
 			info.setId(id);
 			info.setIndexDisplayFlag(1);
 			info.setStateType(1);
+			info.setCoverImagePath("");
+			info.setSubTitle("");
 			if(StringUtils.isEmpty(info.getCoverImagePath())){
 				info.setCoverImagePath("");
 			}
